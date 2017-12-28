@@ -9,13 +9,13 @@ module.exports = app => {
 	app.get('/auth/google/callback', passport.authenticate('google')); // 2nd part of passport --> get user info and pass back to strategy cb
 
 	// FACEBOOK
-	app.get(
-		'/auth/facebook',
-		passport.authenticate('facebook', {
-			scope: ['public_profile', 'email']
-		})
-	);
-	app.get('/auth/facebook/callback', passport.authenticate('facebook'));
+	// app.get(
+	// 	'/auth/facebook',
+	// 	passport.authenticate('facebook', {
+	// 		scope: ['public_profile', 'email']
+	// 	})
+	// );
+	// app.get('/auth/facebook/callback', passport.authenticate('facebook'));
 
 	// passport deserialize attaches mongoose user model to req.user once authorized
 	app.get('/api/current_user', (req, res) => {
