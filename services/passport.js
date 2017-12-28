@@ -27,7 +27,8 @@ passport.use(
 		{
 			clientID: keys.googleClientID,
 			clientSecret: keys.googleClientSecret,
-			callbackURL: '/auth/google/callback'
+			callbackURL: '/auth/google/callback', // passport as correct domain
+			proxy: true // tell passport to trust proxy and keep https for callback
 		},
 		(accessToken, refreshToken, profile, done) => {
 			newOrExistingUser(profile.id, done);
