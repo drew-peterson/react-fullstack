@@ -13,7 +13,7 @@ passport.serializeUser((user, done) => {
 	done(null, user.id); // user.id is not _oAuthId --> referring to user._id (mongo id) for specific user
 });
 // id: is the above user.id
-// turn id into mongoose model
+// turn id into mongoose model and attached to req.user
 passport.deserializeUser((id, done) => {
 	User.findById(id).then(user => {
 		done(null, user);
@@ -67,3 +67,4 @@ function newOrExistingUser(_oAuthId, done) {
 
 // COOKIES
 // request from browser after logged in > cookie extracts user id and in req we get req.user
+// I think cookie only store the user._id -> the deserialize is the last middleware and attaches the user model to the req
