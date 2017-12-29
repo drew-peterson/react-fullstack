@@ -6,7 +6,14 @@ module.exports = app => {
 		'/auth/google',
 		passport.authenticate('google', { scope: ['profile', 'email'] })
 	);
-	app.get('/auth/google/callback', passport.authenticate('google')); // 2nd part of passport --> get user info and pass back to strategy cb
+	app.get(
+		'/auth/google/callback',
+		passport.authenticate('google'), // 2nd part of passport --> get user info and pass back to strategy cb
+		(req, res) => {
+			// redirect to specific route after passport strategy is model getting user model
+			res.redirect('/surveys');
+		}
+	);
 
 	// FACEBOOK
 	// app.get(
@@ -25,6 +32,6 @@ module.exports = app => {
 	// logout
 	app.get('/api/logout', (req, res) => {
 		req.logout(); // attached by passport, takes cookie and kills the id
-		res.send(req.user);
+		res.redirect('/');
 	});
 };
