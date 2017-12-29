@@ -48,18 +48,30 @@ passport.use(
 // 	)
 // );
 
-function newOrExistingUser(_oAuthId, done) {
-	User.findOne({ _oAuthId }).then(existingUser => {
-		if (existingUser) {
-			done(null, existingUser); // calls passport.serializeUser and passes existingUser as first arg -> user
-		} else {
-			// create new user...
-			new User({ _oAuthId }).save().then(user => {
-				done(null, user);
-			});
-		}
-	});
-}
+// ** PROMISES **
+// function newOrExistingUser(_oAuthId, done) {
+// 	User.findOne({ _oAuthId }).then(existingUser => {
+// 		if (existingUser) {
+// 			done(null, existingUser); // calls passport.serializeUser and passes existingUser as first arg -> user
+// 		} else {
+// 			// create new user...
+// 			new User({ _oAuthId }).save().then(user => {
+// 				done(null, user);
+// 			});
+// 		}
+// 	});
+// }
+
+// ** ES6 async await
+const newOrExistingUser = async (_oAuthId, done) => {
+	const existingUser = await User.findOne({ _oAuthId });
+	if (existingUser) {
+		return done(null, existingUser); // calls passport.serializeUser and passes existingUser as first arg -> user
+	}
+	// the return above will leave function so we dont need else....
+	const user = await new User({ _oAuthId }).save(); // create new user
+	done(null, user);
+};
 
 // JWT
 // Using JWT's in the header of each request in the other course was a result of putting the react app on one domain and the API server on a different one.  In a few lectures we dive really deep into talking about why the server setup in this course makes working with cookies possible.  One of the nasty things around JWT's is that there isn't a great place to store them on the client side - they are almost always weak against XSS attacks.  Using cookies solves that huge huge issue.
