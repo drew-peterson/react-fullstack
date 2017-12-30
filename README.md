@@ -52,3 +52,15 @@ const PORT = process.env.PORT || 5000;
 3. we tell passport proxy is ok + give callback w/ relative route
 4. proxy gives addtional into to browser request -> to go google
 5. google will knows req is comming for 3000 so i will prepend browser domain
+
+## deployment to heroku + building client side automatically....
+
+* heroku only cares about server package.json
+* done here: https://devcenter.heroku.com/articles/nodejs-support#heroku-specific-build-steps
+* "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefex client && npm run build --prefex client"
+
+1. heroku-postbuild: only run this on script on heroku
+2. --prefix client: run this in client directory
+3. NPM_CONFIG... : this enviornemnt var is only set during this command it means alway devDepencies to be installed, I think create-react-app uses devDepencies to minify and such...
+
+* super automated: http://circleci.com/

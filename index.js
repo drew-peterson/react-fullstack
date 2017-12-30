@@ -29,14 +29,19 @@ app.use(passport.session());
 require('./routes/authRoutes')(app); // bring in authRoutes function and call it with app
 require('./routes/billingRoutes')(app); // bring in authRoutes function and call it with app
 
+if (process.env.NODE_ENV === 'production') {
+	// Express will serve up production assesset (main.js, main.css) files
+	app.use(express.static('client/build')); // check for specific file request is looking for -- index.html will ask for main.js in client/build/static/js...
+	// Express will serve up index.html if it doesn not reconize the route
+	// if it does not find file inside client/build then just return index.html
+	const path = require('path');
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, err => {
-	if (err) {
-		console.log('server error', err);
-	} else {
-		console.log('listening on port', PORT);
-	}
-});
+app.listen(PORT);
 
 // express-middleware:
 // app.use -> attach middleware: small functions to be called before sending to route handler app.get....
