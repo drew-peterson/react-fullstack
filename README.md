@@ -57,7 +57,7 @@ const PORT = process.env.PORT || 5000;
 
 * heroku only cares about server package.json
 * done here: https://devcenter.heroku.com/articles/nodejs-support#heroku-specific-build-steps
-* "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefex client && npm run build --prefex client"
+* heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
 
 1. heroku-postbuild: only run this on script on heroku
 2. --prefix client: run this in client directory
