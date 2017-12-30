@@ -5,6 +5,7 @@ import * as actions from '../actions';
 
 class Payments extends Component {
 	render() {
+		console.log('key: ', process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 		return (
 			<StripeCheckout
 				name="Emaily"

@@ -1,9 +1,5 @@
 const keys = require('../config/keys');
 
-console.log('**********************');
-console.log('keys', keys.STRIPE_SECRET_KEY);
-console.log('***********************');
-
 const stripe = require('stripe')(keys.STRIPE_SECRET_KEY);
 const requireLogin = require('../middlewares/requireLogin');
 
