@@ -21,7 +21,8 @@
     "react-stripe-checkout": "^2.6.3",
     "redux": "^3.7.2",
     "redux-promise": "^0.5.3",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "styled-components": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
