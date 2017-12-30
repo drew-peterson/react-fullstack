@@ -12,7 +12,12 @@ import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 
-const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
+const store = createStore(
+	reducers,
+	window.__REDUX_DEVTOOLS_EXTENSION__ &&
+		window.__REDUX_DEVTOOLS_EXTENSION__(),
+	applyMiddleware(reduxThunk)
+);
 
 // when the store is update the provider component will update all its children w/ new state
 ReactDOM.render(
@@ -21,3 +26,5 @@ ReactDOM.render(
 	</Provider>,
 	document.querySelector('#root')
 );
+
+// https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#referencing-environment-variables-in-the-html

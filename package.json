@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "c": "^0.1.0",
     "concurrently": "^3.5.1",
     "cookie-session": "^2.0.0-beta.3",
@@ -25,6 +26,7 @@
     "nodemon": "^1.14.3",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
-    "passport-google-oauth20": "^1.0.0"
+    "passport-google-oauth20": "^1.0.0",
+    "stripe": "^5.4.0"
   }
 }
