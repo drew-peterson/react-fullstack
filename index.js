@@ -5,7 +5,10 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const keys = require('./config/keys');
 
+// Models
 require('./models/User'); // require mongoose models -- model has to exist first before passport can use it
+require('./models/Survey');
+
 require('./services/passport'); // make sure passport is ran...
 
 mongoose.connect(keys.MONGO_URI);
@@ -27,7 +30,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require('./routes/authRoutes')(app); // bring in authRoutes function and call it with app
-require('./routes/billingRoutes')(app); // bring in authRoutes function and call it with app
+require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
 	// Express will serve up production assesset (main.js, main.css) files
