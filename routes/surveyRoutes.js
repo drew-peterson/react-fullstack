@@ -47,6 +47,8 @@ module.exports = app => {
 
 	// SEND GRID webhooks
 	app.post('/api/surveys/webhooks', (req, res) => {
+		console.log(req.body);
+
 		const p = new Path('/api/surveys/:surveyId/:choice'); // match pattern to extract vars..
 		// want to remove duplicate and non click events...
 		// setup chain for lodash start with _.chain() -- end w/ .value() can remove data to iterate over for each chain
