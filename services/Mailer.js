@@ -7,7 +7,7 @@ class Mailer {
 	constructor({ subject, recipients }, template) {
 		this.subject = subject;
 		this.html = template;
-		this.from = 'no-reply@email.com';
+		this.from = 'weeznog@gmail.com';
 		this.to = this.formatAddresses(recipients);
 		this.text = 'test text';
 		// this.tracking_settings = {
