@@ -10,11 +10,11 @@ class Mailer {
 		this.from = 'no-reply@email.com';
 		this.to = this.formatAddresses(recipients);
 		this.text = 'test text';
-		// this.tracking_settings = {
-		// 	click_tracking: {
-		// 		enable: true
-		// 	}
-		// },
+		this.tracking_settings = {
+			click_tracking: {
+				enable: true
+			}
+		},
 		// this.sandbox_mode = false;
 	}
 
