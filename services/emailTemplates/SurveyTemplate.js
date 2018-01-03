@@ -17,9 +17,6 @@ module.exports = survey => {
 					<div>
 						<a href="https://google.com">google test</a>
 					</div>
-					<div>
-						<a href="http://localhost:3000/api/surveys/${survey.id}/no">test local</a>
-					</div>
 				</div>
 			</body>
 		</html>
