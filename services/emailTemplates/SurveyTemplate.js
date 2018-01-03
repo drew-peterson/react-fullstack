@@ -14,15 +14,6 @@ module.exports = survey => {
 					<div>
 						<a href="${keys.REDIRECT_DOMAIN}/api/surveys/${survey.id}/no">No</a>
 					</div>
-					<div>
-						<a href="google.com">google test</a>
-					</div>
-					<div>
-						<a href="http://localhost:3000/api/surveys/${survey.id}/no">test local</a>
-					</div>
-					<div>
-						<a href="${keys.REDIRECT_DOMAIN}">prod test</a>
-					</div>
 				</div>
 			</body>
 		</html>
