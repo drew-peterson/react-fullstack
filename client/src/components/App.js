@@ -7,13 +7,8 @@ import * as actions from '../actions';
 
 import Header from './Header';
 import Landing from './Landing';
-
-const Dashboard = () => {
-	return <h2>Dashboard</h2>;
-};
-const SurveyNew = () => {
-	return <h2>SurveyNew</h2>;
-};
+import Dashboard from './Dashboard';
+import SurveyNew from './surveys/SurveyNew';
 
 class App extends Component {
 	// preferred location for intial ajax request w/ new react
@@ -23,27 +18,20 @@ class App extends Component {
 	render() {
 		return (
 			<ThemeProvider theme={ThemeColor}>
-				<div>
-					<BrowserRouter>
-						{/*materialize-css wants a parent with this class to give padding...*/}
-						<div className="container">
-							<Header />
-							{/* exact is telling route to match exactly...*/}
-							{/* could use <switch> here instead of exact*/}
-							<Route exact path="/" component={Landing} />
-							<Route
-								exact
-								path="/surveys"
-								component={Dashboard}
-							/>
-							<Route
-								exact
-								path="/surveys/new"
-								component={SurveyNew}
-							/>
-						</div>
-					</BrowserRouter>
-				</div>
+				<BrowserRouter>
+					<div className="container">
+						<Header />
+						{/* exact is telling route to match exactly...*/}
+						{/* could use <switch> here instead of exact*/}
+						<Route exact path="/" component={Landing} />
+						<Route exact path="/surveys" component={Dashboard} />
+						<Route
+							exact
+							path="/surveys/new"
+							component={SurveyNew}
+						/>
+					</div>
+				</BrowserRouter>
 			</ThemeProvider>
 		);
 	}

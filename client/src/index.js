@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
 import reducers from './reducers';
-import axios from 'axios';
+// import axios from 'axios';
 
 import reduxThunk from 'redux-thunk';
 // import reduxThunk from 'redux-thunk';
@@ -13,7 +13,7 @@ import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 
-window.axios = axios; // for testing producted routes w/ cookies
+// window.axios = axios; // for testing producted routes w/ cookies
 
 const store = createStore(
 	reducers,

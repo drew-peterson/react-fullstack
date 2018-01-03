@@ -64,3 +64,14 @@ const PORT = process.env.PORT || 5000;
 3. NPM_CONFIG... : this enviornemnt var is only set during this command it means alway devDepencies to be installed, I think create-react-app uses devDepencies to minify and such...
 
 * super automated: http://circleci.com/
+
+# LOCAL TUNNEL
+
+https://github.com/localtunnel/localtunnel
+
+* localhost:5000 is not unique we use localtunnel to as our real domain and post things to our local machine -- only on development.
+* see package.json
+* setup webhook in sendgrid -- cannot do dev / prod so you manually change sendgrid to production...
+* dev webhook url: https://weeznog123.localtunnel.me/api/surveys/webhooks
+* to .me is tunnel then goto express route /api/survey/webhooks w/ post...
+* add .sh file to prevent crashing... might need to require premissions to work...
