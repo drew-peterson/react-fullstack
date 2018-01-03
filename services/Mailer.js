@@ -14,7 +14,7 @@ class Mailer {
 			click_tracking: {
 				enable: true
 			}
-		},
+		};
 		// this.sandbox_mode = false;
 	}
 
