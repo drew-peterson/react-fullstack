@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
-import Card from './Card';
+import SurveyListCard from './SurveyListCard';
 import { TransitionGroup } from 'react-transition-group';
 
 class SurveyList extends Component {
@@ -11,7 +11,7 @@ class SurveyList extends Component {
 	}
 
 	renderSurveys() {
-		const { surveys, deleteSurvey } = this.props;
+		const { surveys } = this.props;
 
 		if (!surveys) {
 			return <div>loading.....</div>;
@@ -19,27 +19,11 @@ class SurveyList extends Component {
 		return _.chain(surveys)
 			.map(survey => {
 				return (
-					<Card key={survey._id}>
-						<div className="card-content">
-							<span className="card-title">{survey.title}</span>
-							<p>{survey.body}</p>
-							<p>{survey._id}</p>
-							<p className="right">
-								Sent on:
-								{new Date(survey.dateSent).toLocaleDateString()}
-							</p>
-						</div>
-						<div className="card-action">
-							<a>Yes: {survey.yes}</a>
-							<a>No: {survey.no}</a>
-							<button
-								className="btn btn-flat white-text red right"
-								onClick={() => deleteSurvey(survey._id)}
-							>
-								Delete
-							</button>
-						</div>
-					</Card>
+					<SurveyListCard
+						key={survey._id}
+						survey={survey}
+						{...this.props}
+					/>
 				);
 			})
 			.reverse()
@@ -48,7 +32,11 @@ class SurveyList extends Component {
 
 	render() {
 		// for lists of transitions wrap in transition group....
-		return <TransitionGroup>{this.renderSurveys()}</TransitionGroup>;
+		return (
+			<TransitionGroup className="row">
+				{this.renderSurveys()}
+			</TransitionGroup>
+		);
 	}
 }
 
