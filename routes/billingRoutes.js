@@ -10,13 +10,13 @@ module.exports = app => {
 		// this is how you handle errors w/ async await
 		try {
 			const charge = await stripe.charges.create({
-				amount: 500,
+				amount: 2000,
 				currency: 'usd',
-				description: '$5 dollars for 5 credits',
+				description: '$20 dollars for 20 credits',
 				source: req.body.id
 			});
 			// req.user is the user model so you can save and such....
-			req.user.credits += 5;
+			req.user.credits += 20;
 			const user = await req.user.save();
 			res.send(user);
 		} catch (error) {

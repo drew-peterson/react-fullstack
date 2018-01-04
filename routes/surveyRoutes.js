@@ -109,4 +109,14 @@ module.exports = app => {
 
 		res.send(surveys);
 	});
+
+	// delete specific surveys...
+	app.delete('/api/surveys/:surveyId', requireLogin, async (req, res) => {
+		try {
+			const survey = await Survey.findByIdAndRemove(req.params.surveyId);
+			res.status(200).send(survey._id);
+		} catch (err) {
+			res.send({ err });
+		}
+	});
 };
