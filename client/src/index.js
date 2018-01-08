@@ -7,7 +7,6 @@ import reducers from './reducers';
 import axios from 'axios';
 
 import reduxThunk from 'redux-thunk';
-// import reduxThunk from 'redux-thunk';
 
 // Provider : is a component from react-redux that helps redux work with react that makes the store accesible to every component
 import { Provider } from 'react-redux';

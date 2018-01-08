@@ -15,28 +15,29 @@ module.exports = app => {
 	// middleWare order matters
 	// have to mark as async to handle async below....
 	app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
-		const { title, subject, body, recipients } = req.body;
-
-		const survey = new Survey({
-			title,
-			subject,
-			body,
-			recipients: recipients
-				.split(',')
-				.map(email => ({ email: email.trim() })), // 1 line return object must wrap in () --> ({object})
-			_user: req.user.id,
-			dateSent: Date.now()
-		});
+		// const { title, subject, body, recipients } = req.body;
+		// const survey = new Survey({
+		// 	title,
+		// 	subject,
+		// 	body,
+		// 	recipients: recipients
+		// 		.split(',')
+		// 		.map(email => ({ email: email.trim() })), // 1 line return object must wrap in () --> ({object})
+		// 	_user: req.user.id,
+		// 	dateSent: Date.now()
+		// });
 		// SEND EMAIL
-		const mailer = new Mailer(survey, surveyTemplate(survey));
+
 		try {
+			const survey = await createOrUpdateSurvey(req);
+			const mailer = new Mailer(survey, surveyTemplate(survey));
 			await mailer.send();
-			await survey.save();
+			// await survey.save();
 			req.user.credits -= 1;
 			const user = await req.user.save(); // req.user is outdated after save so we save new user...
 			res.send(user); // update redux
 		} catch (error) {
-			res.status(422).send({ error });
+			res.status(422).send({ createSurveyError: error });
 		}
 	});
 
@@ -87,25 +88,12 @@ module.exports = app => {
 		res.status(200).send({});
 	});
 
-	// WEBHOOK SENDGRID REQ
-	// {
-	//    event: 'click',
-	//    url_offset: { index: 0, type: 'html' },
-	//    email: 'peteand07@gmail.com',
-	//    timestamp: 1514920652,
-	//    url: 'http://localhost:3000/api/surveys/5a4bdaa32eb8771b46881938/yes' }
-	// }
-
-	// app.post('drew.peterson:Peteand07/api/webhook', (req, res) => {
-	// 	console.log('**********************');
-	// 	console.log('WEB HOOK');
-	// 	console.log('**********************');
-	// });
-
 	app.get('/api/surveys', requireLogin, async (req, res) => {
-		const surveys = await Survey.find({ _user: req.user._id }).select({
-			recipients: 0
-		}); // need to think about what fields we dont want!!! recipeints is big and not used
+		const surveys = await Survey.find({ _user: req.user._id })
+			.select({
+				recipients: 0
+			})
+			.sort('dateSent'); // need to think about what fields we dont want!!! recipeints is big and not used
 
 		res.send(surveys);
 	});
@@ -119,4 +107,56 @@ module.exports = app => {
 			res.send({ err });
 		}
 	});
+
+	app.get('/api/surveys/:surveyId', requireLogin, async (req, res) => {
+		const survey = await Survey.findById({
+			_id: req.params.surveyId
+		});
+
+		res.send(survey);
+	});
+
+	app.put('/api/surveys/draft/:surveyId', requireLogin, async (req, res) => {
+		try {
+			const survey = await createOrUpdateSurvey(req, req.params.surveyId);
+			res.status(200).send(survey);
+		} catch (err) {
+			console.log('error.....', err);
+
+			res.status(422).send(err);
+		}
+	});
 };
+
+function createOrUpdateSurvey(req, surveyId) {
+	const { title, subject, body, recipients } = req.body;
+
+	if (surveyId) {
+		return Survey.findByIdAndUpdate(
+			surveyId,
+			{
+				title,
+				subject,
+				body,
+				recipients: recipients
+					? recipients
+							.split(',')
+							.map(email => ({ email: email.trim() }))
+					: []
+			},
+			{ new: true } // create new return and set defaults if not found...
+		).select({ recipients: 0 });
+	}
+
+	const survey = new Survey({
+		title,
+		subject,
+		body,
+		recipients: recipients
+			.split(',')
+			.map(email => ({ email: email.trim() })), // 1 line return object must wrap in () --> ({object})
+		_user: req.user.id,
+		dateSent: Date.now()
+	});
+	return survey.save();
+}

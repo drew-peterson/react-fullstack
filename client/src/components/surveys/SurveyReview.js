@@ -4,9 +4,16 @@ import { withRouter } from 'react-router-dom'; // how you redirect have to get h
 import formFields from './formFields';
 import * as actions from '../../actions';
 import _ from 'lodash';
+import Materialize from 'materialize-css/dist/js/materialize.min.js';
 
 // functional component need to pas props
-const SurveyReview = ({ onCancel, formValues, submitSurvey, history }) => {
+const SurveyReview = ({
+	onCancel,
+	formValues,
+	submitSurvey,
+	history,
+	errors
+}) => {
 	const reviewFields = _.map(formFields, ({ name, label }) => {
 		return (
 			<div key={name}>
@@ -15,6 +22,12 @@ const SurveyReview = ({ onCancel, formValues, submitSurvey, history }) => {
 			</div>
 		);
 	});
+
+	if (errors) {
+		_.each(errors, (value, key) => {
+			Materialize.toast(value, 4000, 'red');
+		});
+	}
 
 	return (
 		<div>
@@ -38,7 +51,8 @@ const SurveyReview = ({ onCancel, formValues, submitSurvey, history }) => {
 
 function mapStateToProps(state) {
 	return {
-		formValues: state.form.surveyForm.values
+		formValues: state.form.surveyForm.values,
+		errors: state.serverErrors
 	};
 }
 

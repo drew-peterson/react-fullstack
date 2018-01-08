@@ -1,12 +1,16 @@
 import React from 'react';
 import { Transition } from 'react-transition-group';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+// border: ${({ dateSent }) => {
+// 	!dateSent ? '2px solid blue' : null;
+// }};
 const SurveyListCard = styled.div`
 	margin-top: 15px;
 	opacity: 0;
 	transition: 500ms all ease-in-out;
-
+	border: ${props => (!props.dateSent ? '2px solid blue' : '')};
 	${({ status }) => {
 		switch (status) {
 			case 'entering':
@@ -34,7 +38,11 @@ export default props => {
 			}}
 		>
 			{status => (
-				<SurveyListCard className="col s12 m6" status={status}>
+				<SurveyListCard
+					className="col s12 m6"
+					status={status}
+					dateSent={survey.dateSent}
+				>
 					<div className="card">
 						<div className="card-image">
 							<img
@@ -51,6 +59,14 @@ export default props => {
 								{new Date(survey.dateSent).toLocaleDateString()}
 							</p>
 						</div>
+						{!survey.dateSent && (
+							<div className="card-content valign-wrapper">
+								<Link to={`/surveys/new?sId=${survey._id}`}>
+									Edit draft
+								</Link>
+							</div>
+						)}
+
 						<div className="card-action valign-wrapper">
 							<span className="col m3">Yes: {survey.yes}</span>
 							<span className="col m3">No: {survey.no}</span>

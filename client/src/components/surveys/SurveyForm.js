@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as actions from '../../actions';
 import validateEmails from '../../utils/validateEmails';
 import RenderField from './RenderField';
+import { parse as queryString } from 'query-string';
 import _ from 'lodash'; // lodash is faster....
 
 import formFields from './formFields';
 
 class SurveyForm extends Component {
+	componentDidMount() {
+		const { sId } = queryString(this.props.location.search);
+		if (sId) {
+			this.props.selectedSurveyId(sId);
+		}
+	}
+
+	submitSurveyDraft() {
+		const { surveyForm, history } = this.props;
+		this.props.submitSurveyDraft(surveyForm.values, history);
+	}
 	renderFields() {
 		return _.map(formFields, ({ label, name }) => {
 			return (
@@ -31,6 +46,15 @@ class SurveyForm extends Component {
 					Cancel
 				</Link>
 				<button
+					className="teal btn-flat white-text"
+					type="button"
+					style={{ marginLeft: '10px' }}
+					onClick={() => this.submitSurveyDraft()}
+				>
+					Save Draft
+					<i className="material-icons right">save</i>
+				</button>
+				<button
 					className="teal btn-flat right white-text"
 					type="submit"
 				>
@@ -44,7 +68,6 @@ class SurveyForm extends Component {
 
 function validate(values) {
 	const errors = {};
-
 	// try to validate emails w/ ,
 	errors.recipients = validateEmails(values.recipients || '');
 
@@ -58,8 +81,30 @@ function validate(values) {
 	return errors; // if empty form is valid!
 }
 
-export default reduxForm({
-	validate,
+function mapStateToProps(state) {
+	return {
+		surveyForm: state.form.surveyForm,
+		initialValues: state.surveys.selectedSurvey
+	};
+}
+
+// export default reduxForm({
+// 	validate,
+// 	form: 'surveyForm',
+// 	destroyOnUnmount: false // have to refresh broswer to remove form info...
+// })(connect(mapStateToProps, actions)(withRouter(SurveyForm)));
+
+// const form = reduxForm({
+// 	validate,
+// 	form: 'surveyForm'
+// });
+// export default connect(mapStateToProps, actions)(form(withRouter(SurveyForm)));
+
+SurveyForm = reduxForm({
 	form: 'surveyForm',
+	validate,
+	// enableReinitialize: true,
 	destroyOnUnmount: false // have to refresh broswer to remove form info...
 })(SurveyForm);
+
+export default connect(mapStateToProps, actions)(withRouter(SurveyForm));

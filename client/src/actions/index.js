@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_SURVEYS, DELETE_SURVEY } from './types';
+import _ from 'lodash';
+import {
+	FETCH_USER,
+	FETCH_SURVEYS,
+	DELETE_SURVEY,
+	SERVER_ERROR,
+	SELECTED_SURVEY_ID
+} from './types';
 
 export const fetchUser = () => async dispatch => {
 	const res = await axios.get('/api/current_user');
@@ -13,12 +20,17 @@ export const handleToken = token => async dispatch => {
 };
 
 export const submitSurvey = (values, history) => async dispatch => {
-	const res = await axios.post('/api/surveys', values);
-	history.push('/surveys'); // redirect....
-	dispatch({
-		type: FETCH_USER,
-		payload: res.data
-	});
+	dispatch({ type: SERVER_ERROR }); // reset error
+	try {
+		const res = await axios.post('/api/surveys', values);
+		history.push('/surveys'); // redirect....
+		dispatch({
+			type: FETCH_USER,
+			payload: res.data
+		});
+	} catch ({ response }) {
+		dispatch({ type: SERVER_ERROR, payload: response.data });
+	}
 };
 
 export const fetchSurveys = () => async dispatch => {
@@ -26,6 +38,28 @@ export const fetchSurveys = () => async dispatch => {
 	dispatch({
 		type: FETCH_SURVEYS,
 		payload: res.data
+	});
+};
+
+export const selectedSurveyId = surveyId => async dispatch => {
+	const res = await axios.get(`/api/surveys/${surveyId}`);
+
+	const { title, subject, body, recipients, _id } = res.data;
+
+	const recipientsString = _.chain(recipients)
+		.map(recipient => recipient.email)
+		.join(',')
+		.value();
+
+	dispatch({
+		type: SELECTED_SURVEY_ID,
+		payload: {
+			title,
+			subject,
+			body,
+			_id,
+			recipients: recipientsString
+		}
 	});
 };
 
@@ -37,14 +71,10 @@ export const deleteSurvey = surveyId => async dispatch => {
 	});
 };
 
-// old syntax
-// export function fetchUser() {
-// 	return dispatch => {
-// 		axios.get('/api/current_user').then(response => {
-// 			return dispatch({
-// 				type: FETCH_USER,
-// 				payload: response.data
-// 			});
-// 		});
-// 	};
-// }
+export const submitSurveyDraft = (values, history) => {
+	axios.put(`/api/surveys/draft/${values._id}`, values);
+	history.push('/surveys');
+	return {
+		type: ''
+	};
+};
